@@ -41,4 +41,10 @@ public class User {
     public String approveBy;
 
     public String updateBy;
+
+    public String status;
+
+    public String orgType;
+
+
 }
