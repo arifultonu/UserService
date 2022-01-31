@@ -1,4 +1,15 @@
 package com.scube.dev.UserService.service;
 
-public class RoleService {
+import com.scube.dev.UserService.payload.RoleDto;
+
+import java.util.List;
+
+public interface RoleService {
+
+    RoleDto saveRole(RoleDto roleDto);
+
+    List<RoleDto> getAllRole();
+
+    RoleDto findRoleById(long categoryId);
+
 }
