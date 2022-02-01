@@ -4,28 +4,25 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Data
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
+@Table(name = "roles")
 public class Role {
 
     @Id
     @SequenceGenerator(
-            name = "roleId",
-            sequenceName = "roleId",
+            name = "role_id_gen",
+            sequenceName = "role_id_gen",
             allocationSize = 1,
             initialValue = 1
     )
     @GeneratedValue(
             strategy = GenerationType.AUTO,
-            generator = "roleId"
+            generator = "role_id_gen"
     )
+    private long id;
 
-    public long roleId;
-
-    @Column(nullable = false)
-    private String roleName;
+    @Column(length = 60, nullable = false)
+    private String name;
 }

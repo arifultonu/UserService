@@ -20,7 +20,7 @@ import java.util.Map;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorDetails>handleResourceNotFoundException(ResourceNotFoundException exception,
+    public ResponseEntity<ErrorDetails> handleResourceNotFoundException(ResourceNotFoundException exception,
                                                                        WebRequest webRequest){
         ErrorDetails errorDetails = new ErrorDetails(new Date(),
                 exception.getMessage(),webRequest.getDescription(false));
@@ -28,7 +28,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(UserServiceException.class)
-    public ResponseEntity<ErrorDetails>handleBlogAPIException(UserServiceException exception,
+    public ResponseEntity<ErrorDetails> handleUserServiceException(UserServiceException exception,
                                                               WebRequest webRequest){
         ErrorDetails errorDetails = new ErrorDetails(new Date(),
                 exception.getMessage(),webRequest.getDescription(false));
@@ -37,7 +37,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorDetails>handleGlobalException(Exception exception,
+    public ResponseEntity<ErrorDetails> handleGlobalException(Exception exception,
                                                              WebRequest webRequest){
         ErrorDetails errorDetails = new ErrorDetails(new Date(),
                 exception.getMessage(),webRequest.getDescription(false));
