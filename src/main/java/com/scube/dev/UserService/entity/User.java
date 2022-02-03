@@ -44,14 +44,13 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
     private Set<Role> roles;
 
+    private String approveBy;
 
-    public String approveBy;
+    private String updateBy;
 
-    public String updateBy;
+    private String status;
 
-    public String status;
-
-    public String orgType;
+    private String orgType;
 
 
 }
