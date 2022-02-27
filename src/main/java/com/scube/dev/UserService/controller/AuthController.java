@@ -4,10 +4,12 @@ import com.scube.dev.UserService.entity.Role;
 import com.scube.dev.UserService.entity.User;
 import com.scube.dev.UserService.payload.JWTAuthResponse;
 import com.scube.dev.UserService.payload.LoginDto;
+import com.scube.dev.UserService.payload.RoleDto;
 import com.scube.dev.UserService.payload.SignUpDto;
 import com.scube.dev.UserService.repository.RoleRepository;
 import com.scube.dev.UserService.repository.UserRepository;
 import com.scube.dev.UserService.security.JwtTokenProvider;
+import com.scube.dev.UserService.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -35,6 +38,9 @@ public class AuthController {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private RoleService roleService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -77,12 +83,36 @@ public class AuthController {
         user.setEmail(signUpDto.getEmail());
         user.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
 
-        Role roles = roleRepository.findByName("ROLE_ADMIN").get();
-        user.setRoles(Collections.singleton(roles));
+        List<RoleDto> roles = roleService.getAllRole();
 
-        userRepository.save(user);
+        //if there is no user exists create 1st user as Admin after creating some general roles
+        if(roles.isEmpty()){
+
+            //creating a new role Admin
+            RoleDto roleDto = new RoleDto();
+            roleDto.setRoleName("ROLE_ADMIN");
+            roleService.saveRole(roleDto);
+
+            //creating a new role for general Users
+            RoleDto roleDto1 = new RoleDto();
+            roleDto1.setRoleName("ROLE_USER");
+            roleService.saveRole(roleDto1);
+
+            Role role = roleRepository.findByName("ROLE_ADMIN").get();
+            user.setRoles(Collections.singleton(role));
+
+            userRepository.save(user);
+
+        }else{
+
+            Role role = roleRepository.findByName("ROLE_USER").get();
+            user.setRoles(Collections.singleton(role));
+
+            userRepository.save(user);
+        }
 
         return new ResponseEntity<>("User registerd", HttpStatus.OK);
+
     }
 
 }

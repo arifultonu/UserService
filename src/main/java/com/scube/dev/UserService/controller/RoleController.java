@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -28,6 +29,7 @@ public class RoleController {
                     description = "Saved Role from Db.",
                     content = {@Content(mediaType = "application/json")}),
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public RoleDto saveRole(@Valid @RequestBody RoleDto roleDto) {
         log.info("Inside the saveRole Controller");
@@ -41,6 +43,7 @@ public class RoleController {
                     description = "Fetched all Roles from Db",
                     content = {@Content(mediaType = "application/json")}),
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public List<RoleDto> getAllRole() {
         log.info("Inside the getAllRole Controller");
@@ -56,6 +59,7 @@ public class RoleController {
                     description = "Role not found with id : roleId",
                     content = {@Content(mediaType = "application/json")}),
     })
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<RoleDto> findRoleById(@PathVariable(name = "id") long roleId) {
         log.info("Inside the findRoleById Controller");
