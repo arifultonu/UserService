@@ -1,6 +1,8 @@
 package com.scube.dev.UserService.controller;
 
+import com.scube.dev.UserService.entity.Role;
 import com.scube.dev.UserService.payload.RoleDto;
+import com.scube.dev.UserService.repository.RoleRepository;
 import com.scube.dev.UserService.service.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -20,8 +22,13 @@ import java.util.List;
 @RequestMapping("/api/roles")
 @Slf4j
 public class RoleController {
+
     @Autowired
     RoleService roleService;
+
+    @Autowired
+    RoleRepository roleRepository;
+
 
     @Operation(summary = "This is to save a Role in the Db.")
     @ApiResponses(value = {
@@ -31,9 +38,23 @@ public class RoleController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public RoleDto saveRole(@Valid @RequestBody RoleDto roleDto) {
+    public ResponseEntity<?> saveRole(@Valid @RequestBody RoleDto roleDto) {
+
         log.info("Inside the saveRole Controller");
-        return roleService.saveRole(roleDto);
+
+        if (roleRepository.existsByName(roleDto.getRoleName())) {
+
+            return new ResponseEntity<>("Role Already Exists !", HttpStatus.BAD_REQUEST);
+
+        } else {
+
+            roleService.saveRole(roleDto);
+            Role role = roleRepository.getByName(roleDto.getRoleName());
+
+            roleDto.setRoleId(role.getId());
+
+            return new ResponseEntity<>(roleDto, HttpStatus.OK);
+        }
     }
 
 
